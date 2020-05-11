@@ -30,9 +30,9 @@ class AppsManager:
         elif subdirlist[1] == 'hello':
 
             if len(subdirlist) > 2:
-                if re.search('[0-4]',subdirlist[2]):
+                if re.search('([0-9]|[a-zA-Z])*',subdirlist[2]):
 
-                    return html.index('world\'s sub')
+                    return html.index('Hello '+ subdirlist[2])
                 else:
                     return html.index('not a valid')
             else:
