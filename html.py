@@ -1,23 +1,20 @@
 #! /usr/bin/python3
 from db_utils import db_connect
+#All tracks               CHECK
+#Artists                  CHECK
+#Track_Page
 
-def template(path, error= False):
-    if error:
-        html = '''
+def template(Title, Body, error= False):
+    html = '''
         <!DOCTYPE HTML>
 
         <html>
-            <p style="font-size:50px;">ERROR 404</p>
-            <pre style="font-size:18px;">        RESOURCE NOT FOUND.</pre>
-        </html>
-         '''
-    else:
-        html = '''
-        <!DOCTYPE HTML>
-
-        <html>
-            <p style="font-size:30px">This is  {}  directory.</p>
-        </html>'''.format(path)
+            <body>        
+                <p style="font-size:50px">Music Store</p>
+                <pre style="font-size:38px">     {}</pre>
+                {}
+            </body>
+        </html>'''.format(Title, Body)
         
         
     return html.encode('utf-8')
@@ -31,12 +28,7 @@ def all_tracks():
     IDs = cur.fetchall()
     id_num=0
     countLinks=0
-    html ="<!DOCTYPE HTML>"
-    html += """
-    
-    <html>
-    <body>
-        <h1 style="font-size:35px">Tracks List</h1>
+    html = """
         <table style="width=100%">
             <tr>
                 <th>TrackID</th>
@@ -49,9 +41,9 @@ def all_tracks():
     
     for row in rows:
         count=0
-        html+="<tr>"
+        html+="""<tr>"""
         # html+="""<a href="127.0.0.1:8000/tracks/{}"><td>{}</td></a>""".format(IDs[i], IDs[i])
-        for x in row: 
+        for cell in row: 
             count +=1
             
             html+= "<td>" #Open cell tag
@@ -59,47 +51,54 @@ def all_tracks():
             if count==2: #this makes sure only the Name has a bound link
                 html +="<a href='127.0.0.1:8000/tracks/{}'>".format(IDs[countLinks]) #Open Link tag
             
-            html+=str(x) # Table Cell Argument
+            html+=str(cell) # Table Cell Argument
             
             if count==2: #this makes sure only the Name has a bound link
 
                 html +="</a>" #close link tag
             html+="</td>" # Close cell tag
         html+="</tr>"
+    html+= "</table>"
 
-    html += "</table></body></html>"
-
-    return html.encode('utf-8')
-
-
-def track_page(TrackId):
-    conn =db_connect()
-    cur = conn.cursor()
-    sql = """SELECT Name, Composer FROM Tracks WHERE TrackId='"""
-    sql += str(TrackId) + "'"
-    cur.execute(sql)
-    All_IDs = cur.fetchall()
-
-    html = """
-    <!DOCTYPE html>
-    <html>
-        <body>
-            <form action=\"localhost:8000\" method=\"post\">
-        </body>
-    </html>
-    """
-    return html.encode('utf-8')
-
+    return html
 
 def artists_page():
     
     conn = db_connect()
     cur = conn.cursor()
-    cur.execute('SELECT TrackId, Name, Composer, Milliseconds FROM Tracks ORDER BY TrackId')
+    cur.execute('SELECT artists.Name, albums.Title FROM artists LEFT JOIN albums ORDER BY artists.Name')
     rows = cur.fetchall()
-    html="<!DOCTYPE html>"
-    html+="""
+    html="""
+        <table>
+            <tr> <th>Artist</th><th>Album</th> </tr>"""
+    for row in rows:
+        html += "<tr> <td>{}</td> <td>{}</td> </tr>".format(row[0], row[1])
+    html +="</table>"
+    return html    
 
 
-    """
-    return html.encode('utf-8')
+def track_page(TrackId):
+    conn =db_connect()
+    cur = conn.cursor()
+    cur.execute("SELECT Name, Composer FROM Tracks WHERE TrackId='" + str(TrackId) + "'")
+    rows = cur.fetchall()
+    for x,y in rows:
+        name = x 
+        composer = y
+    
+    html = """
+    
+    <form action="localhost:8000/{}" method="post">
+        <label for="Track">Track:{}</label>
+        <input type="text" id="Track" name="Track">
+        <br>
+        <br>
+        <label for="Composer">Composer:{}</label>
+        <input type="text" id="Composer" name="Composer">
+        <br>
+        <br>
+        <input type="submit" value="Submit">
+    </form>""".format(TrackId, name,composer)
+    return html
+
+
