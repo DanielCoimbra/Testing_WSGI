@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from wsgiref.simple_server import make_server
-from html import template, all_tracks
+from html import template, all_tracks, track_page, artists_page
 
 
 def music_store_app(environ, start_response):
@@ -11,25 +11,25 @@ def music_store_app(environ, start_response):
     path = environ['PATH_INFO']
     path_sections = path.split('/')
 
-    if path == "/" or path == '':
-        result = template("the Music Store Index")
+    if path == "/" or path == '':  #root directory
+        result = template("", "")
         
     
-    elif path_sections[1] == 'tracks'.casefold():
+    elif path_sections[1] == 'tracks'.casefold(): #tracks directory
         
         if len(path_sections) > 2:
             if path_sections[2] != '' and path_sections[2] != '/':
-                result = track_page(path_sections[3])
-            else: result = all_tracks()
+                result = template("Track Page", track_page(path_sections[2]))
+            else: result = template("Tracks",all_tracks())
         else:
-            result = all_tracks()
-    elif path_sections[1] == 'artists'.casefold():
-        result = artists_page()
+            result = template("Tracks",all_tracks())
+    elif path_sections[1] == 'artists'.casefold(): # artists directory
+        result = template("Artists Discography",artists_page())
 
 
     else:
             status = '404 NOT FOUND'
-            result = template('erro', True) #  Parametro:Erro = True
+            result = template('404 NOT FOUND', """<pre style="font-size:18px;">                                RESOURCE NOT FOUND.</pre>""")
 
     start_response(status, response_headers)
     return [result]
