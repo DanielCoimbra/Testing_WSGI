@@ -12,6 +12,7 @@ def template(Title, Body, error= False):
             <body>        
                 <p style="font-size:50px">Music Store</p>
                 <pre style="font-size:38px">     {}</pre>
+                <a href="http://127.0.0.1:8000"><p style="font-size:30px">Home</p></a>
                 {}
             </body>
         </html>'''.format(Title, Body)
@@ -22,7 +23,7 @@ def template(Title, Body, error= False):
 def all_tracks():
     conn = db_connect()
     cur = conn.cursor()
-    cur.execute('SELECT TrackId, Name, Composer, Milliseconds FROM Tracks ORDER BY TrackId')
+    cur.execute('SELECT TrackId, Name, Composer, Milliseconds/1000 FROM Tracks ORDER BY TrackId')
     rows = cur.fetchall()
     cur.execute("select TrackId from Tracks")
     IDs = cur.fetchall()
@@ -34,22 +35,23 @@ def all_tracks():
                 <th>TrackID</th>
                 <th>Name</th>
                 <th>Composer</th>
-                <th>Milliseconds</th>
+                <th>Seconds</th>
             </tr>
             """
     
     
     for row in rows:
+        id_num +=1
         count=0
         html+="""<tr>"""
-        # html+="""<a href="127.0.0.1:8000/tracks/{}"><td>{}</td></a>""".format(IDs[i], IDs[i])
+
         for cell in row: 
             count +=1
             
             html+= "<td>" #Open cell tag
             
             if count==2: #this makes sure only the Name has a bound link
-                html +="<a href='127.0.0.1:8000/tracks/{}'>".format(IDs[countLinks]) #Open Link tag
+                html +="<a href='http://127.0.0.1:8000/tracks/{}'>".format(id_num) #Open Link tag
             
             html+=str(cell) # Table Cell Argument
             
@@ -88,7 +90,7 @@ def track_page(TrackId):
     
     html = """
     
-    <form action="localhost:8000/{}" method="post">
+    <form method="post" action="">
         <label for="Track">Track:{}</label>
         <input type="text" id="Track" name="Track">
         <br>
@@ -98,7 +100,17 @@ def track_page(TrackId):
         <br>
         <br>
         <input type="submit" value="Submit">
-    </form>""".format(TrackId, name,composer)
+    </form>""".format(name,composer)
     return html
 
+def track_form_handler(TrackId, name, comp):
+    conn =db_connect()
+    cur = conn.cursor()
+    sql = "UPDATE Tracks SET Name = ?, Composer = ? WHERE TrackId = ?"
+    try:
+        cur.execute(sql, (name, comp, TrackId))
+        conn.commit()
+    except:
+        conn.rollback()
+        raise RuntimeError("An error occurred...")
 
