@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! env python3
 
 from wsgiref.simple_server import make_server
 from html import *
