@@ -5,10 +5,11 @@ from db_utils import db_connect
 # Track_Page
 
 
-def template(Title, Body, error=False):
-    html = '''
+def template(Title, Body):
+    html = """
         <!DOCTYPE HTML>
         <head>
+            <title>Music Store</title>
             <!-- CSS only -->
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
@@ -19,12 +20,16 @@ def template(Title, Body, error=False):
         </head>
         <html>
             <body>        
-                <p style="font-size:50px">Music Store</p>
-                <pre style="font-size:38px">     {}</pre>
-                <a href="http://127.0.0.1:8000"><p style="font-size:30px">Home</p></a>
+                <p style="font-size:90px;text-align:center">Music Store</p>
+                <p style="padding-left:30px;font-size:60px">{}</p>
+                <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
+                <br>
+                <br>
+                <br>
+                <br>
                 {}
             </body>
-        </html>'''.format(Title, Body)
+        </html>""".format(Title, Body)
 
     return html.encode('utf-8')
 
@@ -32,20 +37,21 @@ def template(Title, Body, error=False):
 def all_tracks():
     conn = db_connect()
     cur = conn.cursor()
-    cur.execute(
-        'SELECT TrackId, Name, Composer, Milliseconds/1000 FROM Tracks ORDER BY TrackId')
+    cur.execute('SELECT Tracks.TrackId, Tracks.Name, Tracks.Composer, Tracks.Milliseconds/1000, albums.Title FROM albums LEFT JOIN Tracks ON Tracks.AlbumId = albums.AlbumId order by Tracks.TrackId asc;')
     rows = cur.fetchall()
-    cur.execute("select TrackId from Tracks")
+    cur.execute("SELECT TrackId FROM Tracks")
     IDs = cur.fetchall()
     id_num = 0
     countLinks = 0
     html = """
+    
         <table class="table table-striped">
             <tr>
                 <th>TrackID</th>
                 <th>Name</th>
                 <th>Composer</th>
                 <th>Seconds</th>
+                <th>Album</th>
             </tr>
             """
 
@@ -57,11 +63,11 @@ def all_tracks():
         for cell in row:
             count += 1
 
-            html += "<td>"  # Open cell tag
+            html += "<td style='color:green;'>"  # Open cell tag
 
             if count == 2:  # this makes sure only the Name has a bound link
                 # Open Link tag
-                html += "<a href='http://127.0.0.1:8000/tracks/{}'>".format(
+                html += "<a href='http://127.0.0.1:8000/tracks/{}' style='color:orange'>".format(
                     id_num)
 
             html += str(cell)  # Table Cell Argument
@@ -95,8 +101,8 @@ def artists_page():
 def track_page(TrackId):
     conn = db_connect()
     cur = conn.cursor()
-    cur.execute(
-        "SELECT Name, Composer FROM Tracks WHERE TrackId='" + str(TrackId) + "'")
+    sql = "SELECT Name, Composer FROM Tracks WHERE TrackId=?"
+    cur.execute(sql, TrackId)
     rows = cur.fetchall()
     for x, y in rows:
         name = x
@@ -105,16 +111,19 @@ def track_page(TrackId):
     html = """
     
     <form method="post" action="">
-        <label for="Track">Track:{}</label>
-        <input type="text" id="Track" name="Track">
+        <label for="Track">Track:</label>
+        <input style="width:80%" "type="text" id="Track" name="Track" value ="{}" required>
         <br>
         <br>
-        <label for="Composer">Composer:{}</label>
-        <input type="text" id="Composer" name="Composer">
+        <label for="Composer">Composer:</label>
+        <input style="width:80%" type="text" id="Composer" name="Composer" value ="{}" required>
         <br>
         <br>
         <input type="submit" value="Submit">
-    </form>""".format(name, composer)
+    </form>
+    
+    <a href="http://127.0.0.1:8000" class="button" style="color:red;padding:10px 10px;text-align:center;font-size:35px;">Cancel</a>
+    """.format(name, composer)
     return html
 
 
