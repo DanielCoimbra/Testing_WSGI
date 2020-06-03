@@ -1,9 +1,5 @@
 from wsgiref.simple_server import make_server
 
-from root import root
-
-app = root
-
 from wsgiref import make_server
 
 with make_server('', 8000, app) as httpd:
