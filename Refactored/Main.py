@@ -3,10 +3,9 @@ from wsgiref.simple_server import make_server
 from root import root
 
 app = root
-=======
+
 from wsgiref import make_server
 
->>>>>>> e40a47a312abde12f3a0fb397e5e8715f7e0df07
 with make_server('', 8000, app) as httpd:
     
     print('\nServing on port 8000...''\nTo finish the application process, press Ctrl+C\n\n')
