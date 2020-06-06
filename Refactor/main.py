@@ -1,28 +1,37 @@
-# from root import root_page, launchapp
-# from artists import artists_page, launchapp
-# from tracks import all_tracks_page, launchapp
-# from track_page import track_page, launchapp
+from wsgiref.simple_server import make_server
 from root import root_page
-import artists
-import tracks
-import track_page
-
+from artists import artists_page
+from tracks import all_tracks_page
+from track_page import track_form_handler, track_page_form, track_page
+from error import error_page
 
 def route(environ, start_response):
-    if asdfasdfasdfasd:
-        artists.artists_page(environ, start_response)
-    elif adfasdfasdfasdf:
+    path = environ['PATH_INFO']
+    path_sections = path.split('/')
+    if path == "/" or path == '':
+        return root_page(environ, start_response)
+    elif path_sections[1] == 'tracks':
+        if len(path_sections) > 2:
+            if path_sections[2] == '' or path_sections[2] == '/':
+                return all_tracks_page(environ, start_response)
+            
+            elif len(path_sections) > 2 and int(path_sections[2]) >= 1 and int(path_sections[2]) < 3503:
+                return track_page(environ, start_response)
+            
+            else: return error(environ, start_response)
+
+    elif path_sections[1] == 'artists':
+        return artists_page(environ,start_response)
     else:
-        # 404
+        return error(environ, start_response)
+    
 
-
-def launchapp(app):
-    with make_server('', 8000, app) as httpd:
+def launch_app():
+    with make_server('', 8000, route) as httpd:
         print(
             '\nServing on port 8000...''\nTo finish the application process, press Ctrl+C\n')
         httpd.serve_forever()
 
 
-def main():
-    launchapp(root_page)
-
+if __name__ == '__main__':
+    launch_app()
