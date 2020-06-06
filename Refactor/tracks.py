@@ -31,7 +31,7 @@ def tracks_table():
         for cell in row:
             count += 1
 
-            html += "<td style='color:green;'>"  # Open cell tag
+            html += "<td>"  # Open cell tag
 
             if count == 2:  # this makes sure only the Name has a bound link
                 # Open Link tag
@@ -70,6 +70,7 @@ def all_tracks_page(environ, start_response):
                 <br>
                 <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
                 <a href="http://127.0.0.1:8000/tracks"><p style="font-size:38px">Tracks</p></a
+                <br><br>
                 {}
             </body>
         </html>""".format(tracks_table())

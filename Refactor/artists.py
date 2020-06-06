@@ -3,7 +3,7 @@ from db_utils import db_connect
 
 
 def artists_table():
-   conn = db_connect()
+    conn = db_connect()
     cur = conn.cursor()
     cur.execute(
         'SELECT artists.Name, albums.Title FROM artists LEFT JOIN albums ORDER BY artists.Name')
