@@ -1,6 +1,7 @@
 from db_utils import db_connect
+from cgi import escape, parse_qs    
 from wsgiref.simple_server import make_server
-from tracks import all_tracks_page
+from tracks import tracks_table
 
 
 def get_request(environ):
@@ -11,6 +12,9 @@ def get_request(environ):
     return result
 
 def post_request(environ):
+    path = environ['PATH_INFO']
+    path_sections = path.split('/')
+
     try:
         request_body_size = int(environ.get('CONTENT_LENGTH', 0))
     except (ValueError):
@@ -93,6 +97,7 @@ def track_page(environ, start_response):
         post_request(environ)
         response_headers = [('Content-type', 'text/html'), ('Location', 'http://127.0.0.1:8000/tracks')]
         start_response('302 FOUND', response_headers)
-        result = all_tracks_page
+        result = tracks_table()
+        result = result.encode('utf-8')
         return [result]
     
