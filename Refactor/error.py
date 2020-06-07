@@ -1,7 +1,7 @@
 from wsgiref.simple_server import make_server
 
 def error_page(environ, start_response):
-    status = '404 ERROR'
+    status = '404 NOT FOUND'
     response_headers = [('Content-type','text/html')]
 
     html = """
@@ -19,11 +19,8 @@ def error_page(environ, start_response):
             <body>        
                 <p style="font-size:90px;text-align:center">Music Store</p>
                 <br>
-                <pre style='font-size:110px'>            ERROR</pre>
-                <pre style='font-size:70px'>                     404 NOT FOUND</pre>
-                <br><br><br>
-                <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
-                <a href="http://127.0.0.1:8000/tracks"><p style="font-size:38px">Tracks</p></a><a href="http://127.0.0.1:8000/artists"><p style="font-size:38px">Artists</p></a>
+                <pre style='font-size:70px'>  ERROR</pre>
+                <pre style='font-size:50px'>         404 NOT FOUND</pre>
             </body>
         </html>"""
     start_response(status, response_headers)
