@@ -1,4 +1,4 @@
-from db_utils import db_connect
+from db_utils import db_connect, track_form_handler
 from cgi import escape, parse_qs    
 from wsgiref.simple_server import make_server
 from tracks import tracks_table
@@ -74,17 +74,6 @@ def track_page_form(TrackId): #GET method
     </html>
     """.format(form)
     return html.encode('utf-8')
-
-def track_form_handler(TrackId, name, comp): #POST method
-    conn = db_connect()
-    cur = conn.cursor()
-    sql = "UPDATE Tracks SET Name = ?, Composer = ? WHERE TrackId = ?"
-    try:
-        cur.execute(sql, (name, comp, TrackId))
-        conn.commit()
-    except:
-        conn.rollback()
-        raise RuntimeError("An error occurred...")
 
 def track_page(environ, start_response):
     if environ['REQUEST_METHOD'].casefold() == 'get':
