@@ -69,7 +69,7 @@ def track_page_form(TrackId): #GET method
             <br>
             <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
             {}
-            <a href="http://127.0.0.1:8000" class="button" style="color:red;padding:10px 10px;text-align:center;font-size:35px;">Cancel</a>
+            <a href="http://127.0.0.1:8000/tracks" class="button" style="color:red;padding:10px 10px;text-align:center;font-size:35px;">Cancel</a>
         </body>
     </html>
     """.format(form)
