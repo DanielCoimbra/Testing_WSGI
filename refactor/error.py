@@ -1,5 +1,6 @@
 from wsgiref.simple_server import make_server
 
+
 def error_page(environ, start_response):
     status = '404 NOT FOUND'
     response_headers = [('Content-type','text/html')]
@@ -23,6 +24,8 @@ def error_page(environ, start_response):
                 <pre style='font-size:50px'>         404 NOT FOUND</pre>
             </body>
         </html>"""
+
     start_response(status, response_headers)
     result = html.encode('utf-8')
+    
     return [result]

@@ -23,6 +23,8 @@ def root_page(environ, start_response):
                 <a href="http://127.0.0.1:8000/tracks"><p style="font-size:38px">Tracks</p></a><a href="http://127.0.0.1:8000/artists"><p style="font-size:38px">Artists</p></a>
             </body>
         </html>"""
+
     start_response(status, response_headers)
     result = html.encode('utf-8')
+    
     return [result]

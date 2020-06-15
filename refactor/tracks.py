@@ -5,12 +5,16 @@ from db_utils import db_connect
 def tracks_table():
     conn = db_connect()
     cur = conn.cursor()
+
     cur.execute('SELECT Tracks.TrackId, Tracks.Name, Tracks.Composer, Tracks.Milliseconds/1000, albums.Title FROM albums LEFT JOIN Tracks ON Tracks.AlbumId = albums.AlbumId order by Tracks.TrackId asc;')
     rows = cur.fetchall()
+    
     cur.execute("SELECT TrackId FROM Tracks")
     IDs = cur.fetchall()
+    
     id_num = 0
     countLinks = 0
+    
     html = """
         <!DOCTYPE HTML>
         <head>
@@ -41,33 +45,35 @@ def tracks_table():
 
     for row in rows:
         id_num += 1
-        count = 0
+        count = 0 
         html += """<tr>"""
 
         for cell in row:
             count += 1
 
-            html += "<td>"  # Open cell tag
+            html += "<td>"
 
-            if count == 2:  # this makes sure only the Name has a bound link
-                # Open Link tag
-                html += "<a href='http://127.0.0.1:8000/tracks/{}' style='color:orange'>".format(
-                    id_num)
+            if count == 2: #Link only in track name
+                
+                html += """<a href='http://127.0.0.1:8000/tracks/{}'
+                              style='color:orange'>""".format(id_num)
 
-            html += str(cell)  # Table Cell Argument
+            html += str(cell)
 
-            if count == 2:  # this makes sure only the Name has a bound link
+            if count == 2:
 
-                html += "</a>"  # close link tag
-            html += "</td>"  # Close cell tag
+                html += "</a>"
+            html += "</td>"
         html += "</tr>"
     html += "</table></body></html>"
 
     return html
     
+
 def all_tracks_page(environ, start_response):
     status = '200 OK'
     response_headers = [('Content-type','text/html')]
+
     start_response(status, response_headers)
 
     html = tracks_table()

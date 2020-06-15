@@ -5,8 +5,8 @@ from db_utils import db_connect
 def artists_table():
     conn = db_connect()
     cur = conn.cursor()
-    cur.execute(
-        'SELECT artists.Name, albums.Title FROM artists LEFT JOIN albums ORDER BY artists.Name')
+    cur.execute('''SELECT artists.Name, albums.Title FROM artists
+     LEFT JOIN albums ORDER BY artists.Name''')
     rows = cur.fetchall()
     html = """
         <table>
@@ -14,8 +14,10 @@ def artists_table():
     for row in rows:
         html += "<tr> <td>{}</td> <td>{}</td> </tr>".format(row[0], row[1])
     html += "</table>"
+    
     return html
     
+
 def artists_page(environ, start_response):
     status = '200 OK'
     response_headers = [('Content-type','text/html')]
@@ -39,6 +41,8 @@ def artists_page(environ, start_response):
                 {}
             </body>
         </html>""".format(artists_table())
+    
     start_response(status, response_headers)
     result = html.encode('utf-8')
+    
     return [result]
