@@ -31,7 +31,6 @@ def tracks_table():
                 <p style="font-size:90px;text-align:center">Music Store</p>
                 <br>
                 <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
-                <a href="http://127.0.0.1:8000/tracks/"><p style="font-size:38px">Tracks</p></a>
                 <br><br>
         <table class="table table-striped">
             <tr>
