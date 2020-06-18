@@ -42,10 +42,6 @@ def route(environ, start_response):
 
 def launch_app():
     with make_server('', 8000, route) as httpd:
-        print(
-            '''\nServing on port 8000...
-            \nTo finish the application process, press Ctrl+C\n''')
-
         httpd.serve_forever()
 
 
