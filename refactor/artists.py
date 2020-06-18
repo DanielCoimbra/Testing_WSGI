@@ -8,6 +8,7 @@ def artists_table():
     cur.execute('''SELECT artists.Name, albums.Title FROM artists
      LEFT JOIN albums ORDER BY artists.Name''')
     rows = cur.fetchall()
+    conn.close()
     html = """
         <table>
             <tr> <th>Artist</th><th>Album</th> </tr>"""

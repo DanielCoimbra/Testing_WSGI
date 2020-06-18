@@ -37,6 +37,7 @@ def track_page_form(TrackId): #GET method
     sql = "SELECT Name, Composer FROM Tracks WHERE TrackId=?"
     cur.execute(sql, TrackId)
     rows = cur.fetchall()
+    conn.close()
     for x, y in rows:
         name = x
         composer = y

@@ -11,7 +11,7 @@ def tracks_table():
     
     cur.execute("SELECT TrackId FROM Tracks")
     IDs = cur.fetchall()
-    
+    conn.close()
     id_num = 0
     countLinks = 0
     

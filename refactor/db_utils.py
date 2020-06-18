@@ -21,6 +21,7 @@ def track_form_handler(TrackId, name, comp):
     try:
         cur.execute(sql, (name, comp, TrackId))
         conn.commit()
+        conn.close()
     except:
         conn.rollback()
 
