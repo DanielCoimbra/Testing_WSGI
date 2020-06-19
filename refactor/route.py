@@ -5,6 +5,25 @@ from artists import artists_page
 from tracks import all_tracks_page
 from track_page import track_form_handler, track_page_form, track_page
 from error import error_page
+from werkzeug.routing import Map, Rule, NotFound, RequestRedirect
+
+
+def route2(environ, start_response):
+    urls = map.bind_to_environ(environ)
+    try:
+        endpoint, args = urls.match(environ.get('PATH_INFO') or '/')
+    except (NotFound, RequestRedirect) as e:
+        return e(environ, start_response)
+    
+    return exec(
+                endpoint, globals(),locals() 
+                # {
+                # "root_page": root.root_page,
+                # "all_tracks_page": tracks.all_tracks_page,
+                # "track_page": track_page.track_page,
+                # "artists_page": artists.artists_page
+                # }
+                )
 
 
 def route(environ, start_response):
@@ -19,7 +38,7 @@ def route(environ, start_response):
         if len(path_sections) > 2 :
             if path_sections[2]=='' or path_sections[2]=='/':
     
-                return all_tracks_page(environ, start_response)
+                return exec('all_tracks_page(environ, start_response)')
             
             elif int(path_sections[2])>=1 and int(path_sections[2])<3503:
     
