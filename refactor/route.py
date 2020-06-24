@@ -6,63 +6,28 @@ from tracks import all_tracks_page
 from track_page import track_form_handler, track_page_form, track_page
 from error import error_page
 from werkzeug.routing import Map, Rule, NotFound, RequestRedirect
+from werkzeug.wrappers import Request
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
-
-def route2(environ, start_response):
-    urls = map.bind_to_environ(environ)
-    try:
-        endpoint, args = urls.match(environ.get('PATH_INFO') or '/')
-    except (NotFound, RequestRedirect) as e:
-        return e(environ, start_response)
-    
-    return exec(
-                endpoint, globals(),locals() 
-                # {
-                # "root_page": root.root_page,
-                # "all_tracks_page": tracks.all_tracks_page,
-                # "track_page": track_page.track_page,
-                # "artists_page": artists.artists_page
-                # }
-                )
+url_map = Map([
+    Rule('/', endpoint=root_page),
+    Rule('/tracks', endpoint=all_tracks_page),
+    Rule('/tracks/<int(min=1, max=3503):TrackId>/', 
+          endpoint=track_page),
+    Rule('/artists', endpoint=artists_page)
+                  ])
 
 
 def route(environ, start_response):
-    path = environ['PATH_INFO']
-    path_sections = path.split('/')
-
-    if path == "/" or path == '':
+    urls = url_map.bind_to_environ(environ)
     
-        return root_page(environ, start_response)
-    
-    elif path_sections[1] == 'tracks':
-        if len(path_sections) > 2 :
-            if path_sections[2]=='' or path_sections[2]=='/':
-    
-                return exec('all_tracks_page(environ, start_response)')
-            
-            elif int(path_sections[2])>=1 and int(path_sections[2])<3503:
-    
-                return track_page(environ, start_response)
-            
-            else: 
-                
-                return error_page(environ, start_response)
-        else: 
-            
-            return all_tracks_page(environ, start_response)
-    
-    elif path_sections[1] == 'artists':
+    try:
+        endpoint, args = urls.match(environ.get('PATH_INFO') or '/')
+    except (NotFound, RequestRedirect) as e:
+        pass
         
-        return artists_page(environ,start_response)
-    else:
+        return e(environ, start_response)
     
-        return error_page(environ, start_response)
+    app = endpoint
     
-
-def launch_app():
-    with make_server('', 8000, route) as httpd:
-        httpd.serve_forever()
-
-
-if __name__ == '__main__':
-    launch_app()
+    return app(environ, start_response)
