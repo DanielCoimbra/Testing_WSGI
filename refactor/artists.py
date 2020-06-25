@@ -1,5 +1,6 @@
 from wsgiref.simple_server import make_server
 from db_utils import db_connect
+from werkzeug.wrappers import Request, Response
 
 
 def artists_table():
@@ -18,11 +19,8 @@ def artists_table():
     
     return html
     
-
-def artists_page(environ, start_response):
-    status = '200 OK'
-    response_headers = [('Content-type','text/html')]
-
+@Request.application
+def artists_page(request):
     html = """
         <!DOCTYPE HTML>
         <head>
@@ -42,8 +40,7 @@ def artists_page(environ, start_response):
                 {}
             </body>
         </html>""".format(artists_table())
+
     
-    start_response(status, response_headers)
-    result = html.encode('utf-8')
     
-    return [result]
+    return Response([html], status=200, mimetype='text/html')

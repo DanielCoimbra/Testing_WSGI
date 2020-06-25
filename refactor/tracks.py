@@ -1,5 +1,6 @@
 from wsgiref.simple_server import make_server
 from db_utils import db_connect
+from werkzeug.wrappers import Request, Response
 
 
 def tracks_table():
@@ -69,13 +70,9 @@ def tracks_table():
     return html
     
 
-def all_tracks_page(environ, start_response):
-    status = '200 OK'
-    response_headers = [('Content-type','text/html')]
-
-    start_response(status, response_headers)
+@Request.application
+def all_tracks_page(request):
 
     html = tracks_table()
-    result = html.encode('utf-8')
-    
-    return [result]
+
+    return Response([html], status=200, mimetype='text/html')
