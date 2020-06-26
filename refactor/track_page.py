@@ -2,6 +2,7 @@ from db_utils import db_connect, track_form_handler
 from cgi import escape, parse_qs    
 from wsgiref.simple_server import make_server
 from tracks import tracks_table
+from werkzeug.wrappers import Request, Response
 
 
 def get_request(environ):
@@ -9,7 +10,9 @@ def get_request(environ):
     path_sections = path.split('/')
     track_id = path_sections[2]
     result = track_page_form(track_id)
+
     return result
+
 
 def post_request(environ):
     path = environ['PATH_INFO']
@@ -74,20 +77,22 @@ def track_page_form(TrackId): #GET method
         </body>
     </html>
     """.format(form)
-    return html.encode('utf-8')
 
-def track_page(environ, start_response):
-    if environ['REQUEST_METHOD'].casefold() == 'get':
-         response_headers = [('Content-type', 'text/html')]
-         start_response('200 OK', response_headers)
-         result = get_request(environ)
-         return [result]
+    return html
 
-    elif environ['REQUEST_METHOD'].casefold() == 'post':
-        post_request(environ)
-        response_headers = [('Content-type', 'text/html'), ('Location', 'http://127.0.0.1:8000/tracks')]
-        start_response('302 FOUND', response_headers)
+
+@Request.application
+def track_page(request):
+    if request.method == 'GET':
+         
+        result = get_request(request.environ)
+    
+        return Response([result], status=200, mimetype='text/html')
+
+    elif request.method == 'POST':
+        post_request(request.environ)
+
         result = tracks_table()
-        result = result.encode('utf-8')
-        return [result]
+
+        return Response([result], status=302, mimetype='text/html', headers={'Location':'http://localhost:8000/tracks'})
     
