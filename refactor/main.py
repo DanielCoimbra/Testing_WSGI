@@ -5,4 +5,4 @@ from werkzeug.serving import run_simple
 
 
 if __name__ == "__main__":
-    run_simple('', 8000, route, use_reloader=True)
+    run_simple("0.0.0.0", 8000, route, use_reloader=True)

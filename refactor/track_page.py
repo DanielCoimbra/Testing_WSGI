@@ -1,13 +1,13 @@
 from db_utils import db_connect, track_form_handler
-from cgi import escape, parse_qs    
+from cgi import escape, parse_qs
 from wsgiref.simple_server import make_server
 from tracks import tracks_table
 from werkzeug.wrappers import Request, Response
 
 
 def get_request(environ):
-    path = environ['PATH_INFO']
-    path_sections = path.split('/')
+    path = environ["PATH_INFO"]
+    path_sections = path.split("/")
     track_id = path_sections[2]
     result = track_page_form(track_id)
 
@@ -15,26 +15,28 @@ def get_request(environ):
 
 
 def post_request(environ):
-    path = environ['PATH_INFO']
-    path_sections = path.split('/')
+    path = environ["PATH_INFO"]
+    path_sections = path.split("/")
 
     try:
-        request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+        request_body_size = int(environ.get("CONTENT_LENGTH", 0))
     except (ValueError):
         request_body_size = 0
 
-    request_body = environ['wsgi.input'].read(request_body_size)
+    request_body = environ["wsgi.input"].read(request_body_size)
     d = parse_qs(request_body)
-    track = d[b'Track']
-    composer = d[b'Composer']
+    track = d[b"Track"]
+    composer = d[b"Composer"]
     track = str(track)
     track = escape(track)
     composer = str(composer)
     composer = escape(composer)
-    track_form_handler(path_sections[2], track[3:len(track)-2], composer[3:len(composer)-2])
+    track_form_handler(
+        path_sections[2], track[3 : len(track) - 2], composer[3 : len(composer) - 2]
+    )
 
 
-def track_page_form(TrackId): #GET method
+def track_page_form(TrackId):  # GET method
     conn = db_connect()
     cur = conn.cursor()
     sql = "SELECT Name, Composer FROM Tracks WHERE TrackId=?"
@@ -55,7 +57,9 @@ def track_page_form(TrackId): #GET method
                 <br>
                 <br>
                 <input type="submit" value="Submit">
-            </form>""".format(name, composer)
+            </form>""".format(
+            name, composer
+        )
     html = """
     <!DOCTYPE HTML>
     <head>
@@ -76,23 +80,30 @@ def track_page_form(TrackId): #GET method
             <a href="http://127.0.0.1:8000/tracks" class="button" style="color:red;padding:10px 10px;text-align:center;font-size:35px;">Cancel</a>
         </body>
     </html>
-    """.format(form)
+    """.format(
+        form
+    )
 
     return html
 
 
 @Request.application
 def track_page(request):
-    if request.method == 'GET':
-         
-        result = get_request(request.environ)
-    
-        return Response([result], status=200, mimetype='text/html')
+    if request.method == "GET":
 
-    elif request.method == 'POST':
+        result = get_request(request.environ)
+
+        return Response([result], mimetype="text/html")
+
+    elif request.method == "POST":
         post_request(request.environ)
 
         result = tracks_table()
 
-        return Response([result], status=302, mimetype='text/html', headers={'Location':'http://localhost:8000/tracks'})
-    
+        return Response(
+            [result],
+            status=302,
+            mimetype="text/html",
+            headers={"Location": "http://localhost:8000/tracks"},
+        )
+
