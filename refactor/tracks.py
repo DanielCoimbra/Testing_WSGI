@@ -9,13 +9,13 @@ def tracks_table():
 
     cur.execute('SELECT Tracks.TrackId, Tracks.Name, Tracks.Composer, Tracks.Milliseconds/1000, albums.Title FROM albums LEFT JOIN Tracks ON Tracks.AlbumId = albums.AlbumId order by Tracks.TrackId asc;')
     rows = cur.fetchall()
-    
+
     cur.execute("SELECT TrackId FROM Tracks")
     IDs = cur.fetchall()
     conn.close()
     id_num = 0
     countLinks = 0
-    
+
     html = """
         <!DOCTYPE HTML>
         <head>
@@ -41,11 +41,27 @@ def tracks_table():
                 <th>Seconds</th>
                 <th>Album</th>
             </tr>
+            {{#rows}}
+            <tr>
+                <td>
+                    <a href='http://127.0.0.1:8000/tracks/{{id_num}}' style='color:orange'>{{id_num}}
+                </td>
+            </tr>
+            {{/rows}}
             """
+
+    data = {
+        'rows': [
+            {
+                'id_num': row['TrackID']
+            }
+            for row in rows
+        ]
+    }
 
     for row in rows:
         id_num += 1
-        count = 0 
+        count = 0
         html += """<tr>"""
 
         for cell in row:
@@ -53,8 +69,8 @@ def tracks_table():
 
             html += "<td>"
 
-            if count == 2: #Link only in track name
-                
+            if count == 2:  # Link only in track name
+
                 html += """<a href='http://127.0.0.1:8000/tracks/{}'
                               style='color:orange'>""".format(id_num)
 
@@ -68,7 +84,7 @@ def tracks_table():
     html += "</table></body></html>"
 
     return html
-    
+
 
 @Request.application
 def all_tracks_page(request):
