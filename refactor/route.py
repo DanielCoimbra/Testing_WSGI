@@ -3,7 +3,7 @@ from wsgiref.simple_server import make_server
 from root import root_page
 from artists import artists_page
 from tracks import all_tracks_page
-from track_page import track_form_handler, track_page_form, track_page
+from track_page import track_page
 from error import error_page
 from werkzeug.routing import Map, Rule, NotFound, RequestRedirect
 from werkzeug.wrappers import Request

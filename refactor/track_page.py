@@ -1,18 +1,8 @@
-from db_utils import db_connect, track_form_handler
+from db_utils import db_connect, track_form_handler, get_single_track
 from cgi import escape, parse_qs
 from wsgiref.simple_server import make_server
-from tracks import tracks_table
 from werkzeug.wrappers import Request, Response
-
-
-def get_request(environ):
-    path = environ["PATH_INFO"]
-    path_sections = path.split("/")
-    track_id = path_sections[2]
-    result = track_page_form(track_id)
-
-    return result
-
+import pystache
 
 def post_request(environ):
     path = environ["PATH_INFO"]
@@ -42,7 +32,10 @@ def track_page_form(TrackId):  # GET method
     sql = "SELECT Name, Composer FROM Tracks WHERE TrackId=?"
     cur.execute(sql, TrackId)
     rows = cur.fetchall()
+    cur.close()
     conn.close()
+
+
     for x, y in rows:
         name = x
         composer = y
@@ -91,9 +84,16 @@ def track_page_form(TrackId):  # GET method
 def track_page(request):
     if request.method == "GET":
 
-        result = get_request(request.environ)
+        path = request.environ["PATH_INFO"]
+        path_sections = path.split("/")
+        track_id = path_sections[2]
+        
 
-        return Response([result], mimetype="text/html")
+        with open("templates/single_track.html") as template:
+            html = pystache.render(template.read(), get_single_track(track_id))
+
+        return Response([html], mimetype="text/html")
+
 
     elif request.method == "POST":
         post_request(request.environ)
