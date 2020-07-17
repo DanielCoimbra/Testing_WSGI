@@ -35,7 +35,7 @@ def track_page(request):
 
     if request.method == "GET":
         with open("templates/single_track.html") as template:
-            html = pystache.render(template.read(), get_single_track(track_id))
+            html = pystache.render(template.read(), get_single_track([track_id]))
 
         return Response(
             [html],
