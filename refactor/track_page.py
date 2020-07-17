@@ -4,6 +4,7 @@ from wsgiref.simple_server import make_server
 from werkzeug.wrappers import Request, Response
 import pystache
 
+
 def post_request(environ):
     path = environ["PATH_INFO"]
     path_sections = path.split("/")
@@ -14,13 +15,10 @@ def post_request(environ):
         request_body_size = 0
 
     request_body = environ["wsgi.input"].read(request_body_size)
+    
     d = parse_qs(request_body)
-    track = d[b"Track"]
-    composer = d[b"Composer"]
-    track = str(track)
-    track = escape(track)
-    composer = str(composer)
-    composer = escape(composer)
+    track, composer = escape(str(d[b"Track"])), escape(str(d[b"Composer"]))
+
     track_form_handler(
         path_sections[2], track[2 : len(track) - 2], composer[2 : len(composer) - 2]
     )
@@ -33,14 +31,16 @@ def track_page(request):
     path = request.environ["PATH_INFO"]
     path_sections = path.split("/")
     track_id = path_sections[2]
-        
 
 
     if request.method == "GET":
         with open("templates/single_track.html") as template:
             html = pystache.render(template.read(), get_single_track(track_id))
 
-        return Response([html], mimetype="text/html")
+        return Response(
+            [html],
+            mimetype="text/html"
+            )
 
 
     elif request.method == "POST":
