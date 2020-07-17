@@ -8,6 +8,8 @@ import pystache
 def all_tracks_page(request):
 
     with open("templates/all_tracks.html") as template:
-        html = pystache.render(template.read(), get_all_tracks())
+        html = pystache.render(
+            template.read(), {"rows": [r._asdict() for r in get_all_tracks()]}
+        )
 
-    return Response([html], status=200, mimetype='text/html')
+    return Response([html], status=200, mimetype="text/html")
