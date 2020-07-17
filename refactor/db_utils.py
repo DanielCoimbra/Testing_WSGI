@@ -103,14 +103,14 @@ def get_single_track(TrackId):
     track_dict = {'item': [{'Name': None, 'Composer': None}]}
     
     try:
-        track_dict['item'][0]['Name'] = str(rows[0])
+        track_dict['item'][0]['Name'] = rows[0][0]
     except Exception:
-        track_dict['item'][0]['Name'] = 'None'
+        track_dict['item'][0]['Name'] = "None"
 
     try:
-        track_dict['item'][0]['Composer'] = str(rows[1])
+        track_dict['item'][0]['Composer'] = rows[0][1]
     except Exception:
-        track_dict['item'][0]['Composer'] = 'None'
+        track_dict['item'][0]['Composer'] = "None"
 
     
     return track_dict
