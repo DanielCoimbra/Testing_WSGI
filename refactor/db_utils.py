@@ -31,7 +31,7 @@ def get_artists():
     conn = db_connect()
     cur = conn.cursor()
     cur.execute("""SELECT albums.Title, artists.Name FROM albums
-    LEFT JOIN artists""")
+    INNER JOIN artists ON albums.ArtistId = artists.ArtistId""")
     rows = cur.fetchall()
     cur.close()
     conn.close()
