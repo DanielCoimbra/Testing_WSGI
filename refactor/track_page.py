@@ -1,6 +1,6 @@
 from db_utils import db_connect, track_form_handler, get_single_track
-from cgi import escape, parse_qs
 from wsgiref.simple_server import make_server
+from urllib.parse import parse_qs
 from werkzeug.wrappers import Request, Response
 import pystache
 
@@ -25,12 +25,14 @@ def post_request(environ):
         request_body_size = 0
 
     request_body = environ["wsgi.input"].read(request_body_size)
-
+    print(request_body)
     d = parse_qs(request_body)
-    track, composer = escape(str(d[b"Track"])), escape(str(d[b"Composer"]))
+    print("isto é output******************************************")
+    print(d)
+    track, composer = str(d[b"Track"]), str(d[b"Composer"])
 
     track_form_handler(
-        path_sections[2], track[2 : len(track) - 2], composer[2 : len(composer) - 2]
+        path_sections[2], track[3 : len(track) - 2], composer[3 : len(composer) - 2]
     )
 
 
