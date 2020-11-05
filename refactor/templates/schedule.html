@@ -1,47 +1,109 @@
-<!DOCTYPE HTML>
 
-<head>
-    <title>Music Store</title>
-    <!-- CSS only -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous"></script>
-</head>
 <html>
+	<head>
+    <style>
 
-<body>
-    <p style="font-size:90px;text-align:center">Music Store</p>
-    <br>
-    <a href="http://127.0.0.1:8000" class="button"
-        style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
-    <br><br>
+      /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+    </style>
+    
+
+    <script  type="text/javascript">
+    function showSchedule(evt, _day) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+   // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(_day).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+  </head>
+
+  <p style="font-size:90px;text-align:center">Music Store</p>
+  <br>
+  <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
+  <br><br><br>
+  <!-- Tab links -->
+<div class="tab">
+  <button class="tablinks" onclick="showSchedule(event, 'Day 1')">Day 1</button>
+  <button class="tablinks" onclick="showSchedule(event, 'Day 2')">Day 2</button>
+  <button class="tablinks" onclick="showSchedule(event, 'Day 3')">Day 3</button>
+</div>
+
+<!-- Tab content -->
+<div id="Day 1" class="tabcontent">
+    <br><h3>Day 1</h3>
     <table class="table table-striped">
-        <tr>
-            <th>TrackID</th>
-            <th>Name</th>
-            <th>Composer</th>
-            <th>Seconds</th>
-            <th>Album</th>
-        </tr>
-        {{#rows}}
-        <tr>
-            <td>{{TrackId}}</td>
-            <td> <a href='http://127.0.0.1:8000/tracks/{{TrackId}}' style='color:orange'>{{Name}}</a> </td>
-            <td>{{Composer}}</td>
-            <td>{{Milliseconds}}</td>
-            <td>{{Album}}</td>
-        </tr>
-        {{/rows}}
-    </table>
-</body>
+        <th>Album</th>   <th>Artist</th>
+        {{#day1}}
+        <tr> <td>{{artist}}</td> <td>{{album}}</td> </tr>
+        {{/day1}}
+        </table>
+</div>
 
+<div id="Day 2" class="tabcontent" style="display:none">
+    <br><h3>Day 2</h3>
+    <table class="table table-striped">
+        <th>Album</th>   <th>Artist</th>
+        {{#day2}}
+        <tr> <td>{{artist}}</td> <td>{{album}}</td> </tr>
+        {{/day2}}
+    </table>
+</div>
+
+<div id="Day 3" class="tabcontent" style="display:none">
+    <br><h3>Day 3</h3>
+    <table class="table table-striped">
+        <th>Album</th>   <th>Artist</th>
+        {{#day3}}
+        <tr> <td>{{artist}}</td> <td>{{album}}</td> </tr>
+        {{/day3}}
+    </table></div>
 </html>

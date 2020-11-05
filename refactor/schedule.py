@@ -1,16 +1,20 @@
 from wsgiref.simple_server import make_server
-from db_utils import db_connect, get_all_tracks
+from db_utils import db_connect, get_artists
 from werkzeug.wrappers import Request, Response
 import pystache
-
+from numpy import array_split
 
 @Request.application
 def schedule_page(request):
 
     with open("templates/schedule.html") as template:
+        listt = [r._asdict() for r in get_artists()]
+        lis1, lis2, lis3 = array_split(listt, 3)
+        dic= {"day1": list(lis1), "day2": list(lis2), "day3": list(lis3)}
+
         html = pystache.render(
-            template.read(), {"rows": [r._asdict() for r in get_all_tracks()]}
-        )
+            template.read(), dic
+            )
 
     return Response([html], status=200, mimetype="text/html")
  

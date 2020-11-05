@@ -28,7 +28,7 @@ def track_form_handler(TrackId, name, comp):
 
         raise RuntimeError("An error occurred...")
 
-
+Artist = namedtuple("Artist", ["artist","album"])
 def get_artists():
     conn = db_connect()
     cur = conn.cursor()
@@ -45,22 +45,18 @@ def get_artists():
             dictionary["artist"] = str(row[0])
         except Exception:
             dictionary["artist"] = "None"
-        try:
+
+        try:    
             dictionary["album"] = str(row[1])
         except Exception:
             dictionary["album"] = "None"
         artists_dict["items"].append(dictionary)
 
-    return artists_dict
+    return [Artist(*row) for row in rows]
 
 
 Track = namedtuple("Track", ["TrackId", "Name", "Composer", "Milliseconds", "Album"])
-# t = Track(1, "SDASDFASDF", "Fulano")
-# t.Name
-# t[1]
-# for field in t:
-#     print field
-# t._asdict() -> {"TrackId": 1, "Name": "ASDASDAS", "Composer": "fulano"}
+
 
 
 def get_all_tracks():
