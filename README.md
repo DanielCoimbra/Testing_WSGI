@@ -4,6 +4,8 @@
 
 To use this app, you need to have Python3 and sqlite3 installed.
 
+Run the command $ pip install -r requirements.txt
+
 Run the python script and access the page through a browser. The URL is http://localhost:8000. At this point can watch for the requests coming in on the terminal running the script.
 
 # Refactoring
