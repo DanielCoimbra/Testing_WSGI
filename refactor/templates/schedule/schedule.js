@@ -18,3 +18,13 @@ function showSchedule(evt, _day) {
   document.getElementById(_day).style.display = "block";
   evt.currentTarget.className += " active";
 }
+
+function() {
+  var $this = $(this);
+  if ($this.hasClass("hidden")){
+    $(this).removeClass("hidden").addClass("visible";)
+  }else {
+    $(this).removeClass("visible").addClass("hidden");
+  }
+}
+

@@ -27,7 +27,7 @@ def route(environ, start_response):
         endpoint, args = urls.match(environ.get("PATH_INFO") or "/")
     except (NotFound, RequestRedirect) as e:
         pass
-
+        
         return e(environ, start_response)
-
+    
     return endpoint(environ, start_response)

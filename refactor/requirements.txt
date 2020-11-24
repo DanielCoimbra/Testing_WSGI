@@ -1,2 +1,4 @@
 werkzeug==1.0.1
 pystache==0.5.4
+numpy==1.19.4
+
