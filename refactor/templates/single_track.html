@@ -10,13 +10,11 @@
     </head>
     <html>
         <body>        
-            <p style="font-size:90px;text-align:center">Music Store</p>
-            <br>
-            <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a>
+            <div class="navbar fixed-top" style="background-color: black;"><p style="font-size:90px;text-align:center;color:blanchedalmond">Music Store</p> <a href="http://127.0.0.1:8000" class="button" style="color:green;padding:15px 32px;text-align:center;font-size:50px;">Home</a></div>
             <form method="post" action="">
                 {{#item}}
                 <label for="Track">Track:</label>
-                <input style="width:80%" "type="text" id="Track" name="Track" value ="{{Name}}" required>
+                <input style="width:80%" type="text" id="Track" name="Track" value ="{{Name}}" required>
                 <br>
                 <br>
                 <label for="Composer">Composer:</label>

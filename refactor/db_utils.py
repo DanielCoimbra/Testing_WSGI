@@ -37,20 +37,6 @@ def get_artists():
     rows = cur.fetchall()
     cur.close()
     conn.close()
-    artists_dict = {"items": []}
-
-    for row in rows:
-        dictionary = {}
-        try:
-            dictionary["artist"] = str(row[0])
-        except Exception:
-            dictionary["artist"] = "None"
-
-        try:    
-            dictionary["album"] = str(row[1])
-        except Exception:
-            dictionary["album"] = "None"
-        artists_dict["items"].append(dictionary)
 
     return [Artist(*row) for row in rows]
 

@@ -17,6 +17,20 @@ def schedule_page(request):
             )
 
     return Response([html], status=200, mimetype="text/html")
+
+@Request.application
+def _1(request):
+
+    with open("templates/1.html") as template:
+        listt = [r._asdict() for r in get_artists()]
+        lis1, lis2, lis3 = array_split(listt, 3)
+        dic= {"day1": list(lis1), "day2": list(lis2), "day3": list(lis3)}
+
+        html = pystache.render(
+            template.read(), dic
+            )
+
+    return Response([html], status=200, mimetype="text/html")
  
 
 """

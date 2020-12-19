@@ -8,8 +8,7 @@ import pystache
 def artists_page(request):
     
     with open("templates/artists.html") as template:
-        html = pystache.render(template.read(), get_artists())
+        html = pystache.render(template.read(), {"items": [r._asdict() for r in get_artists()]})
 
-    
-    
+
     return Response([html], status=200, mimetype='text/html')
